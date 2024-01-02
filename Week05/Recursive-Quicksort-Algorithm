@@ -1,0 +1,63 @@
+//Recursive quick-sort algorithm
+#include <iostream>
+#include <vector>
+#include <cstdlib>
+#include <ctime>
+#include <chrono>
+
+using namespace std;
+using namespace std::chrono;
+
+// Partition function to partition the array
+int partition(vector<int>& arr, int low, int high) {
+    int pivot = arr[high]; // Choose the last element as pivot
+    int i = low - 1; // index of smaller element
+
+    for (int j = low; j < high; j++) {
+        // If current element is smaller than the pivot
+        if (arr[j] < pivot) {
+            i++; // increment index of smaller element
+            swap(arr[i], arr[j]);
+        }
+    }
+
+    swap(arr[i+1], arr[high]);
+    return i+1;
+}
+
+// Quick sort function to recursively sort the array
+void quickSort(vector<int>& arr, int low, int high) {
+    if (low < high) {
+        // partition index
+        int pivot = partition(arr, low, high);
+
+        // Recursively sort elements before and after partition
+        quickSort(arr, low, pivot-1);
+        quickSort(arr, pivot+1, high);
+    }
+}
+
+int main() {
+    srand(time(nullptr)); // Initialize random seed
+
+    int n;
+    cout << "Enter size of the array: ";
+    cin >> n;
+
+    vector<int> arr(n);
+
+    // Generate random array
+    for (int i = 0; i < n; i++) {
+        arr[i] = rand() % 100; // random number between 0 and 99
+    }
+
+    auto start = high_resolution_clock::now(); // Start timer
+    quickSort(arr, 0, n-1);
+    auto end = high_resolution_clock::now(); // End timer
+
+
+    auto duration = duration_cast<microseconds>(end - start);
+    cout << "Time taken by sorting function: " << duration.count() << " microseconds" << endl;
+
+    return 0;
+}
